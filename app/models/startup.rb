@@ -30,5 +30,28 @@ class Startup
     all.map(&:domain)
   end
 
+  def sign_contract(venture_capitalist, type, investment)
+    FundingRound.new(venture_capitalist: venture_capitalist, type: type, investment: investment, startup: self)
+  end
+
+  def fundings
+    FundingRound.all.select{|funding| funding.startup == self}
+  end
+
+  def num_funding_rounds
+    fundings.count
+  end
+
+  def total_funds
+    fundings.reduce(0){|total, fund| total += fund.investment}
+  end
+
+  def investors
+    fundings.map{|funding| funding.venture_capitalist.name}.uniq
+  end
+
+  def big_investors
+    VentureCapitalist.tres_commas_club
+  end
 
 end
